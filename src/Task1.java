@@ -122,18 +122,33 @@ import java.util.*;
         return words.toArray(new String[words.size()]);
     }
     private static void writeDistinctWordsToFile(String path_to_the_file, String[] words_list, boolean append) {
-        Set<String> distinctWords = new HashSet<>(Arrays.asList(words_list));
+        String[] distinctWords = new String[words_list.length];
+        int count = 0;
+        for (String word : words_list) {
+            boolean found = false;
+            for (int i = 0; i < count; i++) {
+                if (word.equals(distinctWords[i])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                distinctWords[count] = word;
+                count++;
+            }
+        }
         try {
             FileWriter fileWriter = new FileWriter(path_to_the_file, append);
             PrintWriter writer = new PrintWriter(fileWriter);
-            for (String word : distinctWords) {
-                writer.println(word);
+            for (int i = 0; i < count; i++) {
+                writer.println(distinctWords[i]);
             }
             writer.close();
         } catch (IOException e) {
             System.out.println("Error writing file: " + e.getMessage());
         }
     }
+
     public static void descSort(String[] words_list) {
         for (int i = 1; i < words_list.length; i++) {
             String temp = words_list[i];
